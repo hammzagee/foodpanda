@@ -34,7 +34,6 @@ export default {
 		const emailText = parsedEmail.text
 
 		const { orderTotal, orderTime, restaurantName } = extractOrderDetails(emailText)
-		const amount = getTransactionAmount(emailText);
 		const orderDetails = {
 			orderTotal,
 			orderTime,
