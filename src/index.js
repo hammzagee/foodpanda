@@ -43,13 +43,13 @@ export default {
 		if (env.DEBUG) {
 			await fetch(env.DEV_CONSUME_URL, {
 				method: "POST",
-				body: JSON.stringify(emailDetails),
+				body: JSON.stringify(orderDetails),
 			});
 		}
 		else {
 			await fetch(env.PROD_CONSUME_URL, {
 				method: "POST",
-				body: JSON.stringify(emailDetails),
+				body: JSON.stringify(orderDetails),
 			});
 		}
 	},
