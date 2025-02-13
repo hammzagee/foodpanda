@@ -15,31 +15,15 @@ async function streamToArrayBuffer(stream, streamSize) {
 	return result;
 }
 
-function getDetailFromEmailText(emailText, keyword) {
-	const lines = emailText.split('\n');
-	let detailLine = lines.find(line => line.includes(keyword));
-	if (!detailLine) {
-		return 'Detail not found';
-	}
-	if (keyword === 'Fee') {
-		const feePattern = /Rs\.\s*([\d,]+\.\d{2})/;
-		const feeMatch = detailLine.match(feePattern);
-		return feeMatch ? feeMatch[1].trim() : 'Detail not found';
-	}
-	return detailLine.split(': ').slice(-1)[0].trim();
+function extractOrderDetails(emailText) {
+	return {
+		orderTotal: emailText.match(/Order Total\s*Rs\.\s*([\d,.]+)/i)?.[1] || "Not Found",
+		orderTime: emailText.match(/Order time[:\s]*([\d:APM\s]+)/i)?.[1]?.trim() || "Not Found",
+		restaurantName: emailText.match(/Your order from\s+(.+?)\s+will be on/i)?.[1]?.trim() || "Not Found"
+	};
 }
 
-function getFundsTransferName(emailText) {
-	const nameRegex = /SENT TO\s+(\S+)/;
-	const match = emailText.match(nameRegex);
-	return match ? match[1].trim() : 'Name not found';
-}
 
-function getTransactionAmount(emailText) {
-	const amountPattern = /PKR\s([\d,]+\.\d{2})/;
-	const match = emailText.match(amountPattern);
-	return match ? match[1] : 'Amount not found';
-};
 
 
 export default {
@@ -49,13 +33,14 @@ export default {
 		const parsedEmail = await parser.parse(rawEmail)
 		const emailText = parsedEmail.text
 
-		const beneficiaryAccount = getDetailFromEmailText(emailText, 'Beneficiary Account')
+		const { orderTotal, orderTime, restaurantName } = extractOrderDetails(emailText)
 		const amount = getTransactionAmount(emailText);
-		const emailDetails = {
-			amount,
-			beneficiaryAccount
+		const orderDetails = {
+			orderTotal,
+			orderTime,
+			restaurantName
 		};
-		console.log(emailDetails);
+		console.log(orderDetails);
 		if (env.DEBUG) {
 			await fetch(env.DEV_CONSUME_URL, {
 				method: "POST",
