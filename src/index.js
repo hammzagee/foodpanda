@@ -38,16 +38,18 @@ export default {
 		};
 		console.log(orderDetails);
 		if (env.DEBUG) {
-			await fetch(env.DEV_CONSUME_URL, {
+			fetch(env.DEV_CONSUME_URL, {
 				method: "POST",
 				body: JSON.stringify(orderDetails),
 			});
+			return new Response('OK', { status: 200 });
 		}
 		else {
 			await fetch(env.PROD_CONSUME_URL, {
 				method: "POST",
 				body: JSON.stringify(orderDetails),
 			});
+			return new Response('OK', { status: 200 });
 		}
 	},
 	async fetch(request, env, ctx) {
