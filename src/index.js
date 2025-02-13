@@ -17,9 +17,9 @@ async function streamToArrayBuffer(stream, streamSize) {
 
 function extractOrderDetails(emailText) {
 	return {
-		orderTotal: emailText.match(/Order Total\s*Rs\.\s*([\d,.]+)/i)?.[1] || "Not Found",
+		orderTotal: emailText.match(/Order Total\s*Rs\.\s*([\d,]+(?:\.\d{1,2})?)/i)?.[1] || "Not Found",
 		orderTime: emailText.match(/Order time:\s*([\d-]+\s[\d:]+)/i)?.[1] || "Not Found",
-		restaurantName: emailText.match(/Your order from\s+(.+?)\s+will be on/i)?.[1]?.trim() || "Not Found"
+		restaurantName: emailText.match(/Your order from\s*(.+?)\s*will be on/i)?.[1] || "Not Found",
 	};
 }
 
