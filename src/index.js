@@ -23,10 +23,6 @@ function extractOrderDetails(emailText) {
 	};
 }
 
-
-
-
-
 export default {
 	async email(message, env, ctx) {
 		const rawEmail = await streamToArrayBuffer(message.raw, message.rawSize);
